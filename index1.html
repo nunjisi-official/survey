@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>넌지시 (Nunjisi) - 일상을 바꾸는 따뜻한 넛지</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Pretendard Font CDN -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        warmOrange: '#E67E22',
+                        warmOrangeHover: '#D35400',
+                        warmYellow: '#F39C12',
+                        bgCream: '#FFFDF9',
+                        cardBgStart: '#FFF6EE',
+                        cardBgEnd: '#FFF9E6',
+                        textBrown: '#4A3B32'
+                    },
+                    fontFamily: {
+                        sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-bgCream text-textBrown min-h-screen flex flex-col justify-between font-sans antialiased">
+
+    <!-- Header / Navbar -->
+    <header class="w-full py-6 px-4 md:px-12 flex justify-between items-center max-w-5xl mx-auto border-b border-orange-100">
+        <div class="flex items-center space-x-2">
+            <span class="text-3xl">🍊</span>
+            <div>
+                <span class="text-2xl font-extrabold text-warmOrange tracking-tight block leading-none">넌지시</span>
+                <span class="text-xs text-amber-700/60 font-medium">Nunjisi Lab</span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-3">
+            <span class="text-xs md:text-sm font-medium bg-orange-100 text-warmOrange py-1.5 px-3.5 rounded-full border border-orange-200 shadow-sm">
+                🎪 창업 박람회 라이브 보드
+            </span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="w-full max-w-4xl mx-auto px-4 py-8 flex-grow">
+        <!-- Title Section -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-warmOrange mb-3">
+                불편함을 적으면, 넛지 솔루션이 쌓여요!
+            </h1>
+            <p class="text-base md:text-lg text-amber-800/80">
+                일상 속 고민이나 기업의 행동 유도 이슈를 입력해 보세요.<br class="hidden sm:inline">맞춤 넛지 처방 카드 형태로 이 화면에 지속적으로 등록됩니다.
+            </p>
+        </div>
+
+        <!-- Input Box Section -->
+        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-xl shadow-orange-500/5 border border-orange-200/80 mb-12">
+            <div class="flex items-center justify-between mb-3">
+                <label for="userProblem" class="block text-base font-bold text-textBrown flex items-center gap-2">
+                    <span>💬 고민이나 불편한 상황을 적어주세요</span>
+                </label>
+                <span class="text-xs text-amber-600/70 font-medium">* 박람회 방문객 누구나 자유롭게 등록 가능</span>
+            </div>
+            
+            <textarea id="userProblem" rows="3" 
+                class="w-full p-4 rounded-2xl border border-amber-200 bg-amber-50/20 focus:outline-none focus:ring-2 focus:ring-warmOrange focus:bg-white transition text-textBrown placeholder-amber-900/30 text-sm md:text-base resize-none shadow-inner"
+                placeholder="예: 카페 테라스에 쓰레기를 그냥 두고 가요 / 사무실 전등이 밤새 켜져 있어요 / 식당 잔반이 너무 심해요"></textarea>
+            
+            <button onclick="addNudgeCard()" class="mt-4 w-full bg-warmOrange hover:bg-warmOrangeHover text-white font-bold py-3.5 px-6 rounded-xl shadow-lg shadow-orange-500/20 transition-all duration-300 flex items-center justify-center space-x-2 cursor-pointer transform active:scale-[0.99]">
+                <span>✨ 맞춤 넛지 처방받고 보드에 등록하기</span>
+            </button>
+        </div>
+
+        <!-- Live Card Board Header -->
+        <div class="flex items-center justify-between mb-6 pb-2 border-b-2 border-orange-200">
+            <div class="flex items-center space-x-2">
+                <h2 class="text-xl font-bold text-warmOrange flex items-center gap-2">
+                    <span>📋</span>
+                    <span>실시간 넛지 처방 보드</span>
+                </h2>
+                <span id="cardCountBadge" class="bg-amber-100 text-warmOrangeHover text-xs font-bold px-2.5 py-0.5 rounded-full">
+                    0개 등록됨
+                </span>
+            </div>
+            <button onclick="clearAllCards()" class="text-xs text-stone-400 hover:text-red-500 transition flex items-center gap-1 cursor-pointer">
+                <i class="fa-solid fa-trash-can"></i> 전체 삭제
+            </button>
+        </div>
+
+        <!-- Cards Cumulative Grid Section -->
+        <div id="cardsBoard" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Dynamic Nudge Cards will be inserted here -->
+        </div>
+
+        <!-- Empty State Message -->
+        <div id="emptyState" class="text-center py-16 bg-amber-50/30 rounded-3xl border-2 border-dashed border-amber-200 my-4">
+            <div class="text-4xl mb-3">🍊</div>
+            <h3 class="text-lg font-bold text-amber-800/80 mb-1">아직 등록된 넛지 카드가 없어요</h3>
+            <p class="text-sm text-amber-700/60">상단에 고민이나 불편함을 입력해 첫 번째 넛지 카드를 만들어 보세요!</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-6 text-center text-xs md:text-sm text-stone-500 border-t border-amber-100/50 mt-12">
+        <p>© 2026 Nunjisi. All rights reserved. 부드러운 변화의 시작, 넌지시.</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // 사전 정의된 넛지 DB
+        const NUDGE_DB = [
+            {
+                keywords: ["쓰레기", "무단투기", "분리수거", "길거리", "담배꽁초", "투기", "카페"],
+                category: "공공질서/위생",
+                nudge_name: "스마트 유도선 & 시각적 표지 넛지",
+                principle: "사람들은 직관적으로 안내된 유도선과 동선을 무의식적으로 따라가는 본능이 있습니다.",
+                solution: "쓰레기통까지 이어지는 재미있는 발자국 스티커나 농구 골대 형태의 투입구를 배치하여 자발적 투기를 유도합니다.",
+                biz_item: "시각 유도 스티커 패키지 및 인터랙티브 공간 컨설팅"
+            },
+            {
+                keywords: ["계단", "운동", "건강", "엘리베이터", "칼로리", "살", "전기"],
+                category: "건강/에너지 절약",
+                nudge_name: "재미 기반 인터랙티브(Fun Theory) 넛지",
+                principle: "일상적 선택지에 소소한 재미(Fun) 요소를 결합하면 자발적 행동 변화율이 급상승합니다.",
+                solution: "계단을 오를 때마다 멜로디 소리가 나거나, 계단별 칼로리/수명 연장 수치를 위트 있게 표기합니다.",
+                biz_item: "건물 계단 브랜딩 커스텀 랩핑 서비스"
+            },
+            {
+                keywords: ["잔반", "음식물", "환경", "식판", "절약", "밥", "식당", "급식", "음식"],
+                category: "친환경/비용절감",
+                nudge_name: "기본 제공량 조정(Default Setting) 넛지",
+                principle: "사람들은 설정된 기본 상태(Default)를 별도 저항 없이 선택하는 경향이 강합니다.",
+                solution: "소형 식기를 전면에 기본 배치하고 큰 접시는 필요시 꺼내 쓰도록 유도하여 자연스럽게 잔반을 줄입니다.",
+                biz_item: "에코 식기 동선 배치 컨설팅 패키지"
+            },
+            {
+                keywords: ["전등", "소등", "에너지", "불", "사무실", "전기", "아끼다"],
+                category: "에너지 절약",
+                nudge_name: "직관적 시각 피드백 & 메시징 넛지",
+                principle: "자신의 행동 결과가 눈에 직관적으로 보이면 즉각적인 자율 행동 교정이 일어납니다.",
+                solution: "스위치 주위에 지구 캐릭터 온도 스티커나 '퇴근 시 클릭' 유도 스위치 커버를 부착합니다.",
+                biz_item: "사내 에코 사이니지 및 스위치 넛지 솔루션"
+            }
+        ];
+
+        // 페이지 로드 시 기존 저장된 카드 불러오기
+        document.addEventListener("DOMContentLoaded", () => {
+            loadCards();
+        });
+
+        // 로컬스토리지에서 카드 목록 로드
+        function getStoredCards() {
+            const data = localStorage.getItem("nunjisi_cards");
+            return data ? JSON.parse(data) : [];
+        }
+
+        // 로컬스토리지에 카드 목록 저장
+        function saveCards(cards) {
+            localStorage.setItem("nunjisi_cards", JSON.stringify(cards));
+            updateUI();
+        }
+
+        // 카드 추가
+        function addNudgeCard() {
+            const inputField = document.getElementById("userProblem");
+            const userInput = inputField.value.trim();
+
+            if (!userInput) {
+                alert("⚠️ 고민이나 불편함을 입력해 주세요!");
+                inputField.focus();
+                return;
+            }
+
+            // 키워드 매칭
+            let matched = NUDGE_DB.find(item => item.keywords.some(kw => userInput.includes(kw)));
+
+            // 매칭 실패 시 기본 넛지 전략 제안
+            if (!matched) {
+                matched = {
+                    category: "맞춤 행동 유도",
+                    nudge_name: "동선 재배치 & 피드백 프레이밍 넛지",
+                    principle: "환경적 자극과 타당한 명분 제공은 사람의 무의식적 선택을 긍정적 방향으로 이끕니다.",
+                    solution: `"${userInput}" 문제 해결을 위해 시선이 집중되는 동선에 직관적 피드백 표지판 및 보상형 가이드를 배치합니다.`,
+                    biz_item: "현장 문제 분석 및 맞춤형 넛지 사이니지 제작"
+                };
+            }
+
+            // 생성할 카드 객체
+            const newCard = {
+                id: Date.now(),
+                problem: userInput,
+                category: matched.category,
+                nudgeName: matched.nudge_name,
+                principle: matched.principle,
+                solution: matched.solution,
+                bizItem: matched.biz_item,
+                time: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+            };
+
+            const cards = getStoredCards();
+            cards.unshift(newCard); // 최신 입력이 제일 위에 뜨도록 최상단 추가
+            saveCards(cards);
+
+            // 입력창 초기화
+            inputField.value = "";
+        }
+
+        // 개별 카드 삭제
+        function deleteCard(id) {
+            let cards = getStoredCards();
+            cards = cards.filter(card => card.id !== id);
+            saveCards(cards);
+        }
+
+        // 전체 카드 삭제
+        function clearAllCards() {
+            if (getStoredCards().length === 0) return;
+            if (confirm("정말로 모든 넛지 카드를 삭제하시겠습니까?")) {
+                localStorage.removeItem("nunjisi_cards");
+                updateUI();
+            }
+        }
+
+        // UI 신규 렌더링
+        function updateUI() {
+            const cards = getStoredCards();
+            const board = document.getElementById("cardsBoard");
+            const emptyState = document.getElementById("emptyState");
+            const badge = document.getElementById("cardCountBadge");
+
+            badge.innerText = `${cards.length}개 등록됨`;
+
+            if (cards.length === 0) {
+                board.innerHTML = "";
+                emptyState.classList.remove("hidden");
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+
+            board.innerHTML = cards.map(card => `
+                <div class="bg-gradient-to-br from-cardBgStart to-cardBgEnd border-2 border-warmYellow p-6 rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 relative flex flex-col justify-between group">
+                    <div>
+                        <!-- Card Top Bar -->
+                        <div class="flex justify-between items-start mb-3 border-b border-amber-200/60 pb-3">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="bg-warmOrange text-white text-xs font-bold px-2.5 py-1 rounded-lg shadow-sm">
+                                    🏷️ ${card.category}
+                                </span>
+                                <span class="text-xs text-amber-800/60 font-medium">
+                                    🕒 ${card.time}
+                                </span>
+                            </div>
+                            <button onclick="deleteCard(${card.id})" class="text-amber-800/40 hover:text-red-500 transition text-sm p-1 cursor-pointer" title="삭제">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+
+                        <!-- User Problem -->
+                        <div class="mb-4 bg-white/80 p-3.5 rounded-2xl border border-orange-100">
+                            <span class="text-xs font-bold text-amber-900/60 block mb-1">❓ 고민 / 불편 상황</span>
+                            <p class="text-sm font-semibold text-textBrown leading-relaxed">"${escapeHtml(card.problem)}"</p>
+                        </div>
+
+                        <!-- Nudge Prescription -->
+                        <div class="space-y-2.5 text-xs md:text-sm text-textBrown">
+                            <div>
+                                <span class="font-bold text-warmOrangeHover block">🎯 넛지 전략</span>
+                                <span class="font-bold text-base text-warmOrange">${escapeHtml(card.nudgeName)}</span>
+                            </div>
+                            <div>
+                                <span class="font-bold text-amber-900/80">🧠 심리학적 원리:</span>
+                                <span class="text-stone-700">${escapeHtml(card.principle)}</span>
+                            </div>
+                            <div>
+                                <span class="font-bold text-amber-900/80">🛠️ 추천 제품/서비스:</span>
+                                <span class="text-stone-700">${escapeHtml(card.solution)}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Bottom Business Item -->
+                    <div class="mt-4 pt-3 border-t border-amber-200/60 flex items-center justify-between">
+                        <span class="text-xs font-bold text-amber-800/70">📦 추천 사업 아이템</span>
+                        <span class="text-xs font-semibold bg-amber-100 text-amber-900 px-2.5 py-1 rounded-md border border-amber-200">
+                            ${escapeHtml(card.bizItem)}
+                        </span>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        // 로컬 데이터 새로고침
+        function loadCards() {
+            updateUI();
+        }
+
+        // HTML 문자열 이스케이프 방지 함수
+        function escapeHtml(str) {
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
