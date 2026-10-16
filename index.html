@@ -169,4 +169,339 @@
             border: 2px solid var(--primary-yellow);
             border-radius: 20px;
             padding: 25px;
-            position
+            position: relative;
+            box-shadow: 0 8px 20px rgba(230, 126, 34, 0.1);
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(230, 126, 34, 0.2);
+        }
+
+        .user-tag {
+            background-color: var(--primary-orange);
+            color: #FFFFFF;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .timestamp {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .btn-delete {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #A6ACAF;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .btn-delete:hover {
+            color: #E74C3C;
+        }
+
+        .user-problem-box {
+            background-color: rgba(255, 255, 255, 0.7);
+            border-left: 4px solid var(--primary-orange);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            word-break: keep-all;
+        }
+
+        .solution-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .info-item {
+            background: #FFFFFF;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(243, 156, 18, 0.3);
+        }
+
+        .info-item .label {
+            font-weight: 800;
+            color: var(--dark-orange);
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .info-item .content {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            word-break: keep-all;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            background: #FFFFFF;
+            border: 2px dashed #E0E0E0;
+            border-radius: 20px;
+            color: var(--text-muted);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        @media (min-width: 768px) {
+            body { padding: 40px 20px 80px; }
+            .solution-section { grid-template-columns: repeat(2, 1fr); }
+            .full-width { grid-column: span 2; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="brand-logo">🍊 넌지시</div>
+        <div class="brand-subtitle">강요하지 않고 자연스럽게 변화를 만드는 맞춤형 넛지 처방전</div>
+    </header>
+
+    <!-- 입력 폼 -->
+    <div class="form-card">
+        <form id="nudgeForm">
+            <div class="form-group">
+                <label for="userName">👤 이름 또는 기업 / 단체명</label>
+                <input type="text" id="userName" class="form-control" placeholder="예: 고양카페 / 김성연" required>
+            </div>
+            <div class="form-group">
+                <label for="userProblem">💬 해결하고 싶은 일상 속 불편함이나 고민</label>
+                <textarea id="userProblem" class="form-control" placeholder="예: 매장 입구 옆에 담배꽁초가 계속 무단 투기돼요. / 회의 시간이 자꾸 지연돼요." required></textarea>
+            </div>
+            <button type="submit" class="btn-submit">✨ 맞춤형 넛지 솔루션 처방받기</button>
+        </form>
+    </div>
+
+    <!-- 처방 결과 누적 보드 -->
+    <div class="board-header">
+        <div class="board-title">📋 실시간 넛지 처방 보드</div>
+        <button class="btn-clear" id="btnClearAll">전체 비우기</button>
+    </div>
+
+    <div id="cardsGrid" class="cards-grid">
+        <!-- 등록된 카드가 여기에 계속해서 누적됩니다 -->
+    </div>
+
+    <footer>
+        © 2026 Nunjisi. All rights reserved. 부드러운 변화의 시작, 넌지시.
+    </footer>
+</div>
+
+<script>
+    // 넛지 알고리즘 DB
+    const NUDGE_DATABASE = [
+        {
+            keywords: ["쓰레기", "담배", "꽁초", "무단투기", "길거리", "청소"],
+            strategy: "시각적 유도선 및 피드백 넛지 (Footprints & Interactive Nudge)",
+            mechanism: "인간은 명확한 가이드라인(선, 시각적 기호)이 주어지면 본능적으로 해당 동선을 따르며, 유희성(Fun Theory)이 가미되면 자발적으로 행동합니다.",
+            location: "무단투기 빈발 구역 및 쓰레기통 주변 바닥/벽면",
+            elements: "노란색 유도 스티커, 투표형 담배꽁초 수거함(A vs B 선택형), 농구골대 모양 투입구",
+            copywriting: "'당신의 투표가 깨끗한 거리를 만듭니다' / '이 선을 따라 쓰레기통으로 골인해 보세요!'",
+            bizItem: "맞춤형 바닥 넛지 랩핑 키트 및 인터랙티브 투표형 수거함 렌탈"
+        },
+        {
+            keywords: ["잔반", "음식", "잔반량", "급식", "식당", "버리는"],
+            strategy: "기본값 조절 및 시각적 직관성 넛지 (Default & Visual Portion Nudge)",
+            mechanism: "제공받는 기본 용기의 크기나 기본 세팅(Default)이 인간의 식사량 및 식습관 선택에 절대적인 영향을 미칩니다.",
+            location: "식당 배식대 및 식기 반납구 주변",
+            elements: "작은 크기의 보조 식기 기본 배치, 식판 내 '적정량 시각 가이드선', 잔반 누적 저울 모니터",
+            copywriting: "'먹을 만큼만 덜어서 환경을 보호해요' / '오늘 우리의 잔반 줄이기 목표까지 -10kg!'",
+            bizItem: "구내식당 친환경 넛지 식기 패키지 및 잔반 줄이기 캠페인 컨설팅"
+        },
+        {
+            keywords: ["회의", "시간", "지연", "사내", "업무", "지각"],
+            strategy: "사회적 현시 및 프레이밍 넛지 (Social Framing & Visible Timer)",
+            mechanism: "시간의 흐름이 눈으로 직관적으로 보일 때 집중도가 비약적으로 증가하며, 행동의 가시성이 향상되면 지각률이 감소합니다.",
+            location: "회의실 중앙 테이블 및 사내 출입구",
+            elements: "스탠딩 회의 전용 테이블, 대형 시각적 아날로그 카운트다운 타이머, 정시 시작 알림음",
+            copywriting: "'핵심만 명확하게! 15분 스탠딩 타임' / '다음 팀을 위해 5분 전 마무리를 준비해 주세요.'",
+            bizItem: "스마트 타임박스 타이머 및 사내 업무효율 넛지 가이드북"
+        },
+        {
+            keywords: ["계단", "운동", "엘리베이터", "건강", "에너지"],
+            strategy: "즐거움 창출 및 유쾌한 피드백 넛지 (Fun Theory & Calorie Nudge)",
+            mechanism: "지루하고 피하고 싶은 일상 과제에 재미 요소나 즉각적인 긍정 피드백을 제공하면 행동 자발성이 높아집니다.",
+            location: "건물 1층 엘리베이터 옆 계단 입구 및 계단 단면",
+            elements: "계단 오를 때 발소리에 반응하는 인터랙티브 사운드/조명, 계단별 수명 연장 소모 칼로리 표기",
+            copywriting: "'1층 오를 때마다 건강 수명 +2분!' / '엘리베이터 대기시간 1분 vs 계단 이용 30초'",
+            bizItem: "건물 로비 및 공공장소 맞춤형 피아노 계단 및 건강 넛지 시트"
+        }
+    ];
+
+    const DEFAULT_NUDGE = {
+        strategy: "행동 유도형 공간 재배치 및 맥락 프레이밍 넛지",
+        mechanism: "선택 구조(Choice Architecture)를 재설계하여 부담이나 강요 없이 원하는 행동의 실행 장벽을 낮춥니다.",
+        location: "문제 행동이 발생하는 접점 및 시선이 가장 먼저 머무는 동선",
+        elements: "직관적 픽토그램 안내판, 동선 스티커, 감성적 유도 문구 카드",
+        copywriting: "'작은 관심이 더 나은 환경을 만듭니다. 함께해 주실 거죠?'",
+        bizItem: "현장 맥락 분석 리포트 및 맞춤형 넛지 사이니지 제작"
+    };
+
+    const nudgeForm = document.getElementById('nudgeForm');
+    const cardsGrid = document.getElementById('cardsGrid');
+    const btnClearAll = document.getElementById('btnClearAll');
+
+    document.addEventListener('DOMContentLoaded', loadCards);
+
+    nudgeForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('userName').value.trim();
+        const problem = document.getElementById('userProblem').value.trim();
+
+        if (!name || !problem) return;
+
+        let matchedNudge = DEFAULT_NUDGE;
+        for (const item of NUDGE_DATABASE) {
+            if (item.keywords.some(kw => problem.includes(kw))) {
+                matchedNudge = item;
+                break;
+            }
+        }
+
+        const newCardData = {
+            id: Date.now(),
+            name: name,
+            problem: problem,
+            solution: matchedNudge,
+            timestamp: new Date().toLocaleString('ko-KR', { 
+                month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+            })
+        };
+
+        saveCard(newCardData);
+        renderCard(newCardData, true);
+
+        document.getElementById('userProblem').value = '';
+    });
+
+    btnClearAll.addEventListener('click', function() {
+        if (confirm("모든 처방 기록을 삭제하시겠습니까?")) {
+            localStorage.removeItem('nunjisiCards');
+            cardsGrid.innerHTML = '';
+            checkEmptyState();
+        }
+    });
+
+    function saveCard(cardData) {
+        const currentCards = JSON.parse(localStorage.getItem('nunjisiCards') || '[]');
+        currentCards.unshift(cardData);
+        localStorage.setItem('nunjisiCards', JSON.stringify(currentCards));
+    }
+
+    function loadCards() {
+        const currentCards = JSON.parse(localStorage.getItem('nunjisiCards') || '[]');
+        cardsGrid.innerHTML = '';
+        
+        if (currentCards.length === 0) {
+            checkEmptyState();
+        } else {
+            currentCards.forEach(card => renderCard(card, false));
+        }
+    }
+
+    function renderCard(card, isNew) {
+        const emptyState = document.getElementById('emptyState');
+        if (emptyState) emptyState.remove();
+
+        const cardEl = document.createElement('div');
+        cardEl.className = 'nudge-card';
+        cardEl.dataset.id = card.id;
+
+        cardEl.innerHTML = `
+            <button class="btn-delete" onclick="deleteCard(${card.id})" title="삭제">✕</button>
+            <div class="card-header-info">
+                <span class="user-tag">🏢 ${card.name} 님의 고민</span>
+                <span class="timestamp">${card.timestamp}</span>
+            </div>
+            <div class="user-problem-box">
+                " ${card.problem} "
+            </div>
+            <div class="solution-section">
+                <div class="info-item full-width">
+                    <span class="label">🎯 추천 넛지 전략</span>
+                    <span class="content">${card.solution.strategy}</span>
+                </div>
+                <div class="info-item full-width">
+                    <span class="label">🧠 심리학적 메커니즘</span>
+                    <span class="content">${card.solution.mechanism}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">📍 실천 장소 및 적용 포인트</span>
+                    <span class="content">${card.solution.location}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">🎨 물리적 / 디자인 요소</span>
+                    <span class="content">${card.solution.elements}</span>
+                </div>
+                <div class="info-item full-width">
+                    <span class="label">💬 추천 안내 문구 (카피라이팅)</span>
+                    <span class="content">${card.solution.copywriting}</span>
+                </div>
+                <div class="info-item full-width">
+                    <span class="label">📦 넌지시 제안 제품 / 서비스</span>
+                    <span class="content">${card.solution.bizItem}</span>
+                </div>
+            </div>
+        `;
+
+        if (isNew) {
+            cardsGrid.prepend(cardEl);
+        } else {
+            cardsGrid.appendChild(cardEl);
+        }
+    }
+
+    function deleteCard(id) {
+        let currentCards = JSON.parse(localStorage.getItem('nunjisiCards') || '[]');
+        currentCards = currentCards.filter(card => card.id !== id);
+        localStorage.setItem('nunjisiCards', JSON.stringify(currentCards));
+
+        const cardEl = document.querySelector(`.nudge-card[data-id="${id}"]`);
+        if (cardEl) cardEl.remove();
+
+        checkEmptyState();
+    }
+
+    function checkEmptyState() {
+        if (cardsGrid.children.length === 0) {
+            cardsGrid.innerHTML = `
+                <div id="emptyState" class="empty-state">
+                    <p>💡 위 폼에 고민을 입력하시면 맞춤형 넛지 처방전이 이곳에 차곡차곡 쌓입니다.</p>
+                </div>
+            `;
+        }
+    }
+</script>
+
+</body>
+</html>
