@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>넌지시(Nunjisi) - 100선 행동경제학 맞춤형 넛지 처방전</title>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+        :root {
+            --primary-orange: #E67E22;
+            --primary-yellow: #F39C12;
+            --dark-orange: #D35400;
+            --bg-cream: #FFFDF9;
+            --card-bg-start: #FFF6EE;
+            --card-bg-end: #FFF9E6;
+            --text-dark: #4A3B32;
+            --text-muted: #7F8C8D;
+            --border-color: #F5D0A9;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 20px 15px 60px;
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+
+        header {
+            text-align: center;
+            margin-bottom: 35px;
+            padding: 20px 0 10px;
+        }
+
+        .brand-logo {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--primary-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        .brand-subtitle {
+            font-size: 1.15rem;
+            color: var(--dark-orange);
+            font-weight: 600;
+            word-break: keep-all;
+        }
+
+        .form-card {
+            background: #FFFFFF;
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(230, 126, 34, 0.08);
+            margin-bottom: 40px;
+        }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1.5px solid #E0E0E0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background-color: #FAFAFA;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-orange);
+            background-color: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.15);
+        }
+
+        textarea.form-control { resize: vertical; min-height: 90px; }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-orange), var(--dark-orange));
+            color: #FFFFFF;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(230, 126, 34, 0.25);
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(230, 126, 34, 0.35);
+        }
+
+        .board-header {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed var(--border-color);
+        }
+
+        .board-title { font-size: 1.5rem; font-weight: 800; color: var(--dark-orange); }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 7px 12px;
+            border-radius: 20px;
+            border: 1.5px solid var(--border-color);
+            background: #fff;
+            color: var(--text-dark);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn.active {
+            background: var(--primary-orange);
+            color: #fff;
+            border-color: var(--primary-orange);
+        }
+
+        .cards-grid { display: grid; grid-template-columns: 1fr; gap: 25px; }
+
+        .nudge-card {
+            background: linear-gradient(135deg, var(--card-bg-start) 0%, var(--card-bg-end) 100%);
+            border: 2px solid var(--primary-yellow);
+            border-radius: 20px;
+            padding: 25px;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(230, 126, 34, 0.1);
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(230, 126, 34, 0.2);
+        }
+
+        .user-tag {
+            background-color: var(--primary-orange);
+            color: #FFFFFF;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .timestamp { font-size: 0.8rem; color: var(--text-muted); }
+
+        .user-problem-box {
+            background-color: rgba(255, 255, 255, 0.7);
+            border-left: 4px solid var(--primary-orange);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            word-break: keep-all;
+        }
+
+        .solution-section { display: grid; grid-template-columns: 1fr; gap: 12px; }
+
+        .info-item {
+            background: #FFFFFF;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(243, 156, 18, 0.3);
+        }
+
+        .info-item .label {
+            font-weight: 800;
+            color: var(--dark-orange);
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .info-item .content {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            word-break: keep-all;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            background: #FFFFFF;
+            border: 2px dashed #E0E0E0;
+            border-radius: 20px;
+            color: var(--text-muted);
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 30px;
+            font-weight: 700;
+            color: var(--primary-orange);
+        }
+
+        footer { text-align: center; margin-top: 50px; color: var(--text-muted); font-size: 0.85rem; }
+
+        @media (min-width: 768px) {
+            body { padding: 40px 20px 80px; }
+            .solution-section { grid-template-columns: repeat(2, 1fr); }
+            .full-width { grid-column: span 2; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="brand-logo">🍊 넌지시</div>
+        <div class="brand-subtitle">100가지 행동경제학 사례로 일상을 바꾸는 맞춤형 넛지 처방전</div>
+    </header>
+
+    <!-- 입력 폼 -->
+    <div class="form-card">
+        <form id="nudgeForm">
+            <div class="form-group">
+                <label for="userName">👤 이름 또는 기업 / 단체명</label>
+                <input type="text" id="userName" class="form-control" placeholder="예: 고양국제고 / 성연" required>
+            </div>
+            <div class="form-group">
+                <label for="userProblem">💬 해결하고 싶은 일상 속 불편함이나 고민</label>
+                <textarea id="userProblem" class="form-control" placeholder="예: 세금 체납이 고민이에요 / 회의가 자꾸 지연돼요 / 공부할 때 폰을 너무 봐요" required></textarea>
+            </div>
+            <button type="submit" class="btn-submit" id="btnSubmit">✨ 맞춤형 넛지 솔루션 처방받기</button>
+        </form>
+    </div>
+
+    <!-- 처방 결과 보드 및 10대 카테고리 필터 -->
+    <div class="board-header">
+        <div class="board-title">📋 실시간 넛지 처방 보드</div>
+        <div class="filter-tabs">
+            <button class="filter-btn active" data-category="all">전체 보기</button>
+            <button class="filter-btn" data-category="건강·생활">🍎 건강·생활</button>
+            <button class="filter-btn" data-category="환경·에너지">🌱 환경·에너지</button>
+            <button class="filter-btn" data-category="금융·저축">💰 금융·저축</button>
+            <button class="filter-btn" data-category="교육·학습">📚 교육·학습</button>
+            <button class="filter-btn" data-category="공공·행정">🏛️ 공공·행정</button>
+            <button class="filter-btn" data-category="이커머스">🛒 이커머스</button>
+            <button class="filter-btn" data-category="디지털웰빙">📱 디지털웰빙</button>
+            <button class="filter-btn" data-category="직장·조직">💼 직장·조직</button>
+            <button class="filter-btn" data-category="안전·교통">🚨 안전·교통</button>
+            <button class="filter-btn" data-category="사회·관계">🤝 사회·관계</button>
+        </div>
+    </div>
+
+    <div id="cardsGrid" class="cards-grid">
+        <div class="loading-state">🔄 구글 데이터베이스에서 최신 처방 보드를 불러오는 중...</div>
+    </div>
+
+    <footer>
+        © 2026 Nunjisi. All rights reserved. 부드러운 변화의 시작, 넌지시.
+    </footer>
+</div>
+
+<script>
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwElZ79YWAlHL-66zjAsix7QikTWYJKdzgugXjvw6z0VZUefGJNsoSHrtic223M4OOR/exec";
+
+    // 💡 100선 내장 마스터 데이터베이스
+    const NUDGE_DATABASE = [
+        // A. 건강·생활습관
+        { category: "건강·생활", keywords: ["계단", "엘리베이터", "오르기"], strategy: "계단 발자국 및 칼로리 소모 스티커 넛지", mechanism: "시각적 단서와 보상 기대감을 주어 자발적인 신체 활동을 유도합니다.", location: "건물 1층 계단 입구", elements: "발자국 스티커, 소모 칼로리 표시판", copywriting: "'한 걸음마다 건강이 쌓이는 행복한 계단'", bizItem: "건강 계단 디자인 시트 패키지" },
+        { category: "건강·생활", keywords: ["식사", "접시", "과식", "그릇"], strategy: "작은 접시 및 앵커링 넛지", mechanism: "그릇 크기의 착시를 활용해 시각적 포만감을 주어 식사량을 조절합니다.", location: "급식실 및 식탁", elements: "소형 식기류 기본 제공", copywriting: "'알맞은 그릇 크기가 건강한 식습관의 시작입니다.'", bizItem: "다이어트 웰빙 식기 세트" },
+        { category: "건강·생활", keywords: ["물", "수분", "섭취", "물병"], strategy: "가시성 확보 및 리마인더 넛지", mechanism: "시야에 잘 띄는 위치에 물병을 두고 시간대별 알림을 제공해 음용 빈도를 높입니다.", location: "책상 위", elements: "투명 눈금 물병, 시간별 마시기 알림", copywriting: "'지금 시원한 물 한 잔으로 에너지를 충전하세요!'", bizItem: "스마트 타임 물병" },
+        { category: "건강·생활", keywords: ["건강식", "채소", "과일", "매대"], strategy: "선택 설계 및 위치 배치 넛지", mechanism: "매대 눈높이에 건강한 식품을 배치하여 첫 번째 선택지가 되도록 유도합니다.", location: "식당 배식대, 마트 매대", elements: "눈높이 진열대", copywriting: "'오늘의 신선한 비타민을 가장 먼저 만나보세요.'", bizItem: "매장 친환경 디스플레이 컨설팅" },
+        { category: "건강·생활", keywords: ["약", "복용", "스트릭", "알림"], strategy: "습관 연결 및 연속 기록(스트릭) 넛지", mechanism: "매일 복용하는 행동을 시각적 기록으로 연결해 중단하고 싶지 않은 동기를 부여합니다.", location: "스마트폰 앱, 약통", elements: "스트릭 카운터, 푸시 알림", copywriting: "'오늘도 연속 복용 성공! 건강한 하루가 쌓이고 있어요.'", bizItem: "스마트 알람 약통 및 앱 패키지" },
+        { category: "건강·생활", keywords: ["앉아", "스트레칭", "사무실"], strategy: "타이밍 넛지 및 휴식 유도", mechanism: "특정 시간(50분)이 지나면 즉각적인 스트레칭 안내를 띄워 신체 경직을 막습니다.", location: "PC 모니터 화면", elements: "전면 팝업 가이드", copywriting: "'잠시 일어나 목과 어깨를 펴고 호흡을 가듬어 보세요.'", bizItem: "오피스 웰니스 스트레칭 앱" },
+        { category: "건강·생활", keywords: ["흡연", "담배", "금연", "돈"], strategy: "공개 서약 및 손실 프레이밍 넛지", mechanism: "금연 서약을 주변에 공개하고 아낀 금액을 실시간으로 보여주어 동기를 강화합니다.", location: "개인 스마트폰 화면", elements: "실시간 저축 금액 카운터", copywriting: "'금연으로 아낀 금액으로 소중한 사람과 추억을 만들어요.'", bizItem: "금연 서포트 디지털 플래너" },
+        { category: "건강·생활", keywords: ["건강검진", "예약", "병원"], strategy: "기본값(Default) 및 마찰 감소 넛지", mechanism: "날짜와 시간이 미리 지정된 예약 문자를 발송해 선택의 부담과 귀찮음을 줄입니다.", location: "모바일 문자 메시지", elements: "원클릭 수락 버튼", copywriting: "'회원님을 위해 미리 배정된 검진 일정을 확인해 보세요.'", bizItem: "병원 예약 자동화 솔루션" },
+        { category: "건강·생활", keywords: ["수면", "잠", "취침", "스마트폰"], strategy: "마찰 추가 및 디스플레이 조도 넛지", mechanism: "취침 시간이 가까워질수록 화면을 어둡게 만들어 자연스러운 수면 유도를 돕습니다.", location: "스마트폰 화면", elements: "야간 모드 자동 전환, 블루라이트 차단", copywriting: "'편안한 밤을 위해 화면 밝기를 낮추고 휴식을 준비하세요.'", bizItem: "수면 유도 스마트 디스플레이 설정" },
+        { category: "건강·생활", keywords: ["당", "음료", "탄산", "라벨"], strategy: "정보 단순화 및 신호등 라벨 넛지", mechanism: "당류 함량을 직관적인 색상(신호등 체계)으로 표기해 선택을 즉각 유도합니다.", location: "음료수 캔, 메뉴판", elements: "초록/노랑/빨강 당류 경고 마크", copywriting: "'건강한 선택을 위한 신호등 라벨을 확인하세요.'", bizItem: "식음료 영양표시 개선 컨설팅" },
+
+        // B. 환경·에너지
+        { category: "환경·에너지", keywords: ["일회용", "컵", "추가요금", "카페"], strategy: "손실 회피 및 가격 프레이밍 넛지", mechanism: "할인 혜택보다 추가 요금 부과 방식을 통해 일회용품 사용을 억제합니다.", location: "카페 카운터, 키오스크", elements: "일회용 컵 보증금/추가금 안내", copywriting: "'텀블러를 지참하시면 추가 요금이 발생하지 않습니다.'", bizItem: "친환경 카페 운영 솔루션" },
+        { category: "환경·에너지", keywords: ["분리배출", "쓰레기통", "재활용"], strategy: "시각적 어포던스 및 투입구 디자인 넛지", mechanism: "투입구의 형태와 색상을 쓰레기 종류와 직관적으로 일치시켜 오류를 줄입니다.", location: "분리수거장", elements: "페트병 모양 투입구, 색상 구분 스티커", copywriting: "'알맞은 구멍에 쏙 넣어주세요!'", bizItem: "직관적 분리수거함 키트" },
+        { category: "환경·에너지", keywords: ["전기", "낭비", "이웃", "요금"], strategy: "사회적 규범(Social Norms) 넛지", mechanism: "비슷한 이웃들의 평균 에너지 사용량을 비교 제시하여 절전 동기를 부여합니다.", location: "고지서, 에너지 관리 앱", elements: "이웃 평균 대비 비교 바 그래프", copywriting: "'우리 동네 평균보다 에너지를 적게 쓰고 있어요!'", bizItem: "스마트홈 에너지 리포트" },
+        { category: "환경·에너지", keywords: ["샤워", "물", "시간", "수도"], strategy: "즉각 피드백 넛지", mechanism: "샤워 중 실시간 물 사용량이나 소요 시간을 눈앞에 보여주어 자발적 절수를 유도합니다.", location: "욕실 샤워기 헤드", elements: "LED 수류 발전 물 사용량 미터기", copywriting: "'지구를 지키는 소중한 물, 알뜰하게 사용 중입니다.'", bizItem: "실시간 절수 샤워기 헤드" },
+        { category: "환경·에너지", keywords: ["영수증", "종이", "전자"], strategy: "기본값(Default) 설정 넛지", mechanism: "종이 영수증 출력 대신 전자 영수증 발급을 기본값으로 설정해 자원 낭비를 줄입니다.", location: "결제 단말기, POS", elements: "전자영수증 기본 체크 옵션", copywriting: "'환경을 위해 전자영수증으로 자동 발급되었습니다.'", bizItem: "스마트 POS 전자영수증 연동 시스템" },
+        { category: "환경·에너지", keywords: ["인쇄물", "종이", "프린트"], strategy: "기본값 조절 넛지", mechanism: "인쇄 시 양면 및 흑백 출력을 기본값으로 지정하여 무심코 버려지는 종이를 아낍니다.", location: "사무실 복합기 프린터 드라이버", elements: "양면/흑백 기본 세팅", copywriting: "'자연을 아끼는 양면·흑백 인쇄가 기본으로 설정되어 있습니다.'", bizItem: "그린 오피스 프린터 세팅 솔루션" },
+        { category: "환경·에너지", keywords: ["잔반", "음식물", "급식", "무게"], strategy: "기본값 및 피드백 넛지", mechanism: "최초 배식량을 소량으로 기본 제공하고 잔반 누적 무게를 실시간으로 공개합니다.", location: "급식실 퇴식구", elements: "잔반 누적 저울 및 전광판", copywriting: "'오늘 우리 학교 총 잔반 무게: 12kg'", bizItem: "스마트 잔반 제로 모니터링 시스템" },
+        { category: "환경·에너지", keywords: ["대중교통", "탄소", "포인트"], strategy: "게이미피케이션 및 환경 보상 넛지", mechanism: "대중교통 이용 시 절감된 탄소량과 적립 포인트를 시각적으로 보여줍니다.", location: "교통카드 앱", elements: "탄소 절감 배지, 마일리지 게이지", copywriting: "'오늘 대중교통으로 지구 온도 0.01도를 낮췄어요!'", bizItem: "그린 모빌리티 리워드 플랫폼" },
+        { category: "환경·에너지", keywords: ["대기전력", "플러그", "멀티탭"], strategy: "자동화(Automation) 넛지", mechanism: "사용하지 않는 가전의 대기전력을 스마트 플러그가 스스로 차단하도록 자동화합니다.", location: "멀티탭, 벽면 콘센트", elements: "자동 대기전력 차단 칩", copywriting: "'보이지 않는 곳 새어나가는 전기를 안전하게 차단합니다.'", bizItem: "스마트 절전 오토 플러그" },
+        { category: "환경·에너지", keywords: ["비닐", "봉지", "장바구니"], strategy: "손실 회피 및 보상 넛지", mechanism: "일회용 봉투를 유료화하고 장바구니 지참 시 즉시 도장을 찍어 보상을 제공합니다.", location: "상점 계산대", elements: "장바구니 스탬프 카드", copywriting: "'장바구니와 함께 지구를 지키고 스탬프도 받아가세요!'", bizItem: "에코 스탬프 리워드 키트" },
+
+        // C. 금융·저축
+        { category: "금융·저축", keywords: ["저축", "월급", "자동이체"], strategy: "기본값 및 자동화 넛지", mechanism: "월급 입금일과 동시에 저축 계좌로 자동 이체되도록 기본 세팅을 유도합니다.", location: "모바일 뱅킹 앱", elements: "급여일 자동적립 설정 화면", copywriting: "'돈이 스쳐 지나가기 전에 미래의 나에게 먼저 저축하세요.'", bizItem: "스마트 자동저축 설계 가이드" },
+        { category: "금융·저축", keywords: ["충동구매", "위시리스트", "결제"], strategy: "냉각 기간(Cooling-off) 넛지", mechanism: "장바구니에 담긴 물건을 24시간 동안 대기시킨 후 결제하게 만들어 충동을 줄입니다.", location: "쇼핑몰 장바구니 페이지", elements: "24시간 쿨링 타이머", copywriting: "'하루만 더 고민해 볼까요? 정말 필요한 물건인지 확인해보세요.'", bizItem: "스마트 웰빙 쇼핑 앱 가드" },
+        { category: "금융·저축", keywords: ["카드", "과소비", "지출"], strategy: "즉각 피드백 넛지", mechanism: "월 누적 지출 한도에 가까워질수록 실시간 푸시와 직관적인 그래프로 경고합니다.", location: "카드 결제 앱", elements: "누적 지출 게이지 바", copywriting: "'이번 달 예산의 80%를 사용하셨습니다. 잠시 지출을 멈춰볼까요?'", bizItem: "실시간 소비 밀착 가드" },
+        { category: "금융·저축", keywords: ["연금", "미가입", "노후"], strategy: "옵트아웃(Opt-out) 기본값 넛지", mechanism: "입사 및 가입 초기 연금 상품이 기본 선택되도록 설계해 가입률을 극대화합니다.", location: "금융 상품 가입 화면", elements: "자동 체크된 연금 저축 옵션", copywriting: "'안정적인 노후를 위한 연금 저축이 기본으로 설계되었습니다.'", bizItem: "디폴트 옵션 연금 가입 솔루션" },
+        { category: "금융·저축", keywords: ["저축", "목표", "진행바"], strategy: "목표 경사 효과(Goal Gradient) 넛지", mechanism: "목표에 가까워질수록 속도가 붙도록 진행바와 시각적 격려를 제공합니다.", location: "저축 앱 대시보드", elements: "달성률 진행바, 응원 메시지", copywriting: "'목표까지 단 10% 남았어요! 조금만 더 힘내세요.'", bizItem: "목표 달성 시각화 위젯" },
+        { category: "금융·저축", keywords: ["소액", "잔돈", "저축"], strategy: "부담 최소화 및 잔돈 적립 넛지", mechanism: "카드 결제 시 발생하는 잔돈을 자동으로 저축 계좌로 쏙쏙 모아줍니다.", location: "결제 연동 뱅킹 앱", elements: "천 원 미만 잔돈 자동 적립 아이콘", copywriting: "'커피 마시고 남은 잔돈이 미래의 종잣돈이 됩니다.'", bizItem: "잔돈 모아 자산 만들기 서비스" },
+        { category: "금융·저축", keywords: ["노후", "미래", "자아"], strategy: "미래 자아 연결 넛지", mechanism: "AI 기술을 활용해 나이 든 내 얼굴의 시뮬레이션을 보여주어 노후 대비의 필요성을 체감케 합니다.", location: "금융 자산 컨설팅 앱", elements: "노후 시뮬레이션 얼굴 변환기", copywriting: "'미래의 멋진 나를 위해 지금부터 단단하게 준비해 주세요.'", bizItem: "미래 자산 매칭 시뮬레이터" },
+        { category: "금융·저축", keywords: ["대출", "상환", "최소상환"], strategy: "앵커링(Anchoring) 제시 넛지", mechanism: "최소 상환액 대신 권장되는 높은 상환액을 기본 앵커로 제시해 원금 상환을 유도합니다.", location: "대출 상환 페이지", elements: "권장 상환액 추천 버튼", copywriting: "'빠른 상환을 통해 이자 부담을 대폭 낮춰보세요.'", bizItem: "스마트 대출 관리 솔루션" },
+        { category: "금융·저축", keywords: ["구독", "해지", "망각"], strategy: "리마인더 및 가시화 넛지", mechanism: "구독 갱신 전 미리 알림을 주고 최근 한 달간의 이용 빈도 리포트를 함께 보여줍니다.", location: "구독 관리 앱 화면", elements: "이용 횟수 제로 경고 배지", copywriting: "'지난달에 한 번도 보지 않은 구독 서비스, 정리를 도와드릴까요?'", bizItem: "스마트 구독 다이어트 매니저" },
+        { category: "금융·저축", keywords: ["주식", "거래", "과잉"], strategy: "근시안적 손실회피 완화 및 지연 넛지", mechanism: "잦은 매매 전 확인 절차를 거치게 하고 장기 수익률 화면을 먼저 보여주어 충동 거래를 막습니다.", location: "증권 거래 앱", elements: "매매 전 숙고 팝업, 장기 차트", copywriting: "'조급한 매매 대신 든든한 장기 투자 성과를 확인해 보세요.'", bizItem: "멘탈 케어 주식 트레이딩 뷰" },
+
+        // D. 교육·학습
+        { category: "교육·학습", keywords: ["과제", "미루기", "마감"], strategy: "사전 약속 및 중간 마감일 설정 넛지", mechanism: "최종 마감 전 중간 목표 마감일을 스스로 설정하고 서약하게 해 미루기를 방지합니다.", location: "학습 플래너 앱", elements: "중간 체크포인트 등록 폼", copywriting: "'작은 단계로 쪼개면 마감일 스트레스가 사라집니다.'", bizItem: "스마트 스터디 마일스톤 메이커" },
+        { category: "교육·학습", keywords: ["복습", "간격", "반복"], strategy: "타이밍 맞춤형 리마인더 넛지", mechanism: "기억이 희미해지는 최적의 복습 타이밍에 맞춰 알림을 보내 장기 기억화를 돕습니다.", location: "학습 관리 플랫폼", elements: "복습 타이밍 알림 푸시", copywriting: "'배운 내용을 오래 기억할 시간이에요! 3분 복습을 시작해볼까요?'", bizItem: "에빙하우스 맞춤형 복습 알람기" },
+        { category: "교육·학습", keywords: ["수업", "참여", "토의"], strategy: "심리적 안전감 및 익명 투표 넛지", mechanism: "소그룹 토의나 익명 투표 시스템을 도입해 소극적인 학생들도 부담 없이 의견을 내게 합니다.", location: "교실 스마트 패드", elements: "익명 의견 제출 툴", copywriting: "'정답은 없어요! 여러분의 소중한 생각을 편하게 남겨주세요.'", bizItem: "인터랙티브 참여형 수업 툴" },
+        { category: "교육·학습", keywords: ["출석", "연속", "스트릭"], strategy: "연속 기록(스트릭) 동기부여 넛지", mechanism: "출석 날짜를 연속으로 이어 붙이는 스트릭 기능을 제공해 꾸준한 참여를 이끌어냅니다.", location: "온라인 강의실 대시보드", elements: "출석 불꽃 아이콘, 연속 일수", copywriting: "'벌써 5일 연속 출석 중! 오늘도 멋지게 이어가볼까요?'", bizItem: "스마트 출석 관리 게이미피케이션" },
+        { category: "교육·학습", keywords: ["독서", "습관", "쪽수"], strategy: "작은 목표 설정 및 진행바 넛지", mechanism: "하루 10쪽이라는 부담 없는 목표를 설정하고 진행 상황을 시각적으로 채워나가게 합니다.", location: "독서 기록 앱", elements: "페이지 달성 바", copywriting: "'하루 10쪽의 마법, 한 달이면 한 권의 책이 완성됩니다.'", bizItem: "데일리 북클럽 진행 바" },
+        { category: "교육·학습", keywords: ["시험", "불안", "마인드셋"], strategy: "성장 마인드셋 프레이밍 넛지", mechanism: "시험 점수보다 '연습하면 뇌가 성장한다'는 문구를 노출해 불안감을 낮추고 도전 정신을 높입니다.", location: "시험지 상단, 학습 안내문", elements: "성장 격려 문구", copywriting: "'틀린 문제는 내가 한 뼘 더 성장하고 있다는 소중한 증거입니다.'", bizItem: "멘탈 케어 학습지 디자인 세트" },
+        { category: "교육·학습", keywords: ["학습", "앱", "이탈"], strategy: "손실 회피형 기록 보호 아이템 넛지", mechanism: "학습 중단 시 연속 기록이 깨지는 것을 방어할 수 있는 보호 아이템을 제공합니다.", location: "학습 앱 메인", elements: "스트릭 보호권 아이콘", copywriting: "'오늘 바쁜 일이 있으셨군요! 보호권을 써서 연속 기록을 지켜보세요.'", bizItem: "스마트 학습 유지 동기화 솔루션" },
+        { category: "교육·학습", keywords: ["피드백", "점수", "코멘트"], strategy: "정보 순서 재배치 넛지", mechanism: "점수나 등급을 먼저 보여주기보다 발전적인 코멘트와 조언을 먼저 노출해 몰입을 돕습니다.", location: "시험 성적표, 과제 피드백 창", elements: "격려 코멘트 상단 배치", copywriting: "'이번 과제에서 가장 돋보였던 멋진 시도를 확인해 보세요!'", bizItem: "따뜻한 교육 피드백 레포트 포맷" },
+        { category: "교육·학습", keywords: ["계획", "실행", "의도"], strategy: "실행 의도(~하면 ~한다) 입력 양식 넛지", mechanism: "'언제, 어디서 공부할 것인지' 구체적인 행동 계획을 문장 형태로 직접 작성하게 합니다.", location: "학습 플래너 입력란", elements: "조건문 형태의 입력 폼", copywriting: "'[오후 7시]에 [독서실 책상]에 앉으면 [영어 단어 20개]를 외운다.'", bizItem: "행동 유도형 스마트 플래너" },
+        { category: "교육·학습", keywords: ["공부", "스마트폰", "보관함"], strategy: "마찰 증가 및 사전 약속 넛지", mechanism: "학습 시간 동안 스마트폰을 눈에 띄지 않는 보관함에 넣도록 물리적 거리를 둡니다.", location: "책상 위 스마트폰 거치대 옆", elements: "잠금형 스마트폰 보관 파우치", copywriting: "'화면을 보지 않는 온전한 1시간, 놀라운 몰입이 찾아옵니다.'", bizItem: "집중력 향상 디톡스 파우치" },
+
+        // E. 공공·행정·시민참여
+        { category: "공공·행정", keywords: ["투표", "참여", "계획"], strategy: "실행 의도 및 사회적 규범 프레이밍 넛지", mechanism: "'언제, 어떻게 투표소에 갈 것인지' 구체적인 계획을 스스로 질문하고 답하게 합니다.", location: "선거 안내 홍보물, 공공 앱", elements: "투표 시간 및 동선 입력 체크박스", copywriting: "'이번 주 수요일 오후 2시, 투표소로 향하는 발걸음에 함께해 주세요.'", bizItem: "시민 참여형 투표 독려 캠페인 키트" },
+        { category: "공공·행정", keywords: ["세금", "체납", "이웃"], strategy: "사회적 규범 및 동조 넛지", mechanism: "대다수 시민들이 이미 성실하게 납부하고 있음을 안내해 자진 납세 심리를 자극합니다.", location: "세금 납부 독촉 고지서", elements: "'이미 미네소타 주민 90% 이상이...' 문구 강조", copywriting: "'성실한 이웃 90%와 함께 깨끗한 지역사회를 만들어갑니다.'", bizItem: "공공 커뮤니케이션 카피 컨설팅" },
+        { category: "공공·행정", keywords: ["장기기증", "면허", "등록"], strategy: "선택 설계(Choice Architecture) 넛지", mechanism: "신분증이나 운전면허 갱신 시 기증 여부를 명확히 선택하도록 질문 절차를 필수로 둡니다.", location: "민원 신청서, 면허증 갱신 화면", elements: "기증 동의 여부 선택 라디오 버튼", copywriting: "'누군가의 소중한 생명을 살리는 따뜻한 나눔에 동참하시겠습니까?'", bizItem: "공공 서비스 UX 선택 설계 리뉴얼" },
+        { category: "공공·행정", keywords: ["민원", "서류", "반려"], strategy: "마찰 감소 및 사전 검증 양식 넛지", mechanism: "입력 단계에서 실시간으로 오류를 사전 검증하여 서류 반려 가능성을 원천 차단합니다.", location: "정부 민원 포털 입력폼", elements: "실시간 오류 감지 및 자동 교정", copywriting: "'작성하신 내용을 실시간으로 검토하여 반려 걱정을 없애드립니다.'", bizItem: "스마트 공공 민원 자동 검증 툴" },
+        { category: "공공·행정", keywords: ["복지", "신청", "누락"], strategy: "자동 안내 및 원클릭 신청 넛지", mechanism: "대상자가 되면 맞춤형으로 자동 안내하고 복잡한 서류 없이 원클릭으로 신청하게 돕습니다.", location: "주민 서비스 앱, 문자 안내", elements: "원클릭 간편 신청 버튼", copywriting: "'회원님께서 받을 수 있는 숨은 복지 혜택이 도착했습니다.'", bizItem: "맞춤형 복지 자동 매칭 플랫폼" },
+        { category: "공공·행정", keywords: ["쓰레기", "무단투기", "눈"], strategy: "감시 단서 및 깨진 유리창 효과 방지 넛지", mechanism: "벽면에 사람의 눈(Eye) 그림이나 깨끗한 조경을 배치해 심리적 감시 효과를 줍니다.", location: "상습 무단 투기 벽면", elements: "눈동자 일러스트 안내판", copywriting: "'깨끗한 이 거리를 당신의 따뜻한 시선으로 지켜주세요.'", bizItem: "도심 클린 존 사이니지 키트" },
+        { category: "공공·행정", keywords: ["지역", "행사", "참여"], strategy: "사회적 증거(Social Proof) 넛지", mechanism: "현재 몇 명의 이웃이 참여 신청을 마쳤는지 실시간 숫자를 보여주어 참여를 유도합니다.", location: "지자체 홍보 페이지", elements: "실시간 참여 인원 카운터", copywriting: "'지금 벌써 350명의 이웃이 함께 신청하셨습니다!'", bizItem: "지자체 행사 실시간 소통 보드" },
+        { category: "공공·행정", keywords: ["설문", "응답", "시간"], strategy: "부담 완화 및 진행바 넛지", mechanism: "설문 시작 전 소요 시간(예: '단 1분 소요')을 미리 알리고 진행바를 제공해 참여율을 높입니다.", location: "설문조사 첫 페이지", elements: "예상 소요 시간 배지, 진행바", copywriting: "'소중한 의견을 들려주세요. 딱 1분이면 충분합니다!'", bizItem: "초간편 시민 설문 UX 솔루션" },
+        { category: "공공·행정", keywords: ["백신", "접종", "예약"], strategy: "소유 의식 및 기본값 넛지", mechanism: "'누구에게나 열린 예약' 대신 '당신을 위해 배정된 접종일' 형태로 안내 문구를 구성합니다.", location: "보건소 안내 문자", elements: "맞춤형 배정일 안내", copywriting: "'회원님을 위해 안전하게 준비된 접종 일정을 확인해 보세요.'", bizItem: "보건 의료 스마트 예약 알림 서비스" },
+        { category: "공공·행정", keywords: ["헌혈", "참여", "보람"], strategy: "정체성 부여 및 피드백 넛지", mechanism: "헌혈 이후 내 혈액이 구체적으로 어떤 환자에게 어떻게 쓰였는지 따뜻한 피드백을 줍니다.", location: "헌혈 후 발송되는 알림톡", elements: "사용처 매칭 스토리 카드", copywriting: "'당신이 나눈 따뜻한 온기가 오늘 누군가의 내일을 지켰습니다.'", bizItem: "스토리텔링형 헌혈 리워드 시스템" },
+
+        // F. 이커머스·소비
+        { category: "이커머스", keywords: ["장바구니", "이탈", "배송"], strategy: "희소성 및 투명성 기반 사실 전달 넛지", mechanism: "과장된 압박 대신 남은 재고와 정확한 배송일 정보를 사실에 근거해 차분히 전달합니다.", location: "상품 상세 페이지", elements: "실시간 재고 수량, 정확한 도착 예정일", copywriting: "'현재 남은 수량 3개, 내일 모레 안전하게 도착합니다.'", bizItem: "투명 재고 및 배송 안내 위젯" },
+        { category: "이커머스", keywords: ["옵션", "선택", "추천"], strategy: "사회적 증거 및 기본값 넛지", mechanism: "가장 많은 소비자들이 선택한 인기 옵션에 '베스트 추천' 마크를 달아 선택 장애를 줄입니다.", location: "옵션 선택 드롭다운", elements: "가장 많이 선택된 옵션 하이라이트", copywriting: "'구매자의 80%가 가장 만족한 스탠다드 옵션입니다.'", bizItem: "스마트 옵션 큐레이션 플러그인" },
+        { category: "이커머스", keywords: ["가격", "비교", "상품"], strategy: "미끼 효과(Decoy Effect) 넛지", mechanism: "3가지 가격대의 상품을 배치해 중간 상품이 가장 합리적으로 보이도록 유도합니다.", location: "가격 비교표 페이지", elements: "추천 상품 하이라이트 박스", copywriting: "'가장 많은 혜택과 구성이 담긴 베스트 플랜을 만나보세요.'", bizItem: "스마트 프라이싱 디스플레이 툴" },
+        { category: "이커머스", keywords: ["반품", "사이즈", "후기"], strategy: "정보 비대칭 해소 및 요약 넛지", mechanism: "구매자들의 체형별 사이즈 후기를 핵심만 요약해 보여주어 반품률을 낮춥니다.", location: "상품 리뷰 영역", elements: "체형별 요약 태그, 사이즈 추천 봇", copywriting: "'나와 비슷한 체형의 구매자들이 추천하는 최적의 사이즈입니다.'", bizItem: "스마트 사이즈 리뷰 요약기" },
+        { category: "이커머스", keywords: ["리뷰", "부족", "별점"], strategy: "마찰 감소형 원클릭 리뷰 넛지", mechanism: "구매 후 복잡한 입력 없이 한 탭으로 별점과 태그를 남길 수 있게 간소화합니다.", location: "배송완료 알림톡 화면", elements: "원클릭 별점 인터페이스", copywriting: "'상품이 마음에 드셨나요? 터치 한 번으로 마음을 전해드려요.'", bizItem: "초간편 원터치 리뷰 수집 시스템" },
+        { category: "이커머스", keywords: ["숨은", "비용", "불만"], strategy: "총액 선공개 투명성 넛지", mechanism: "결제 마지막 단계에서 배송비나 세금이 추가되어 이탈하는 것을 막기 위해 총액을 처음부터 보여줍니다.", location: "상품 리스트 및 상세 페이지", elements: "배송비 포함 총액 표기", copywriting: "'추가 비용 없는 투명한 최종 결제 금액을 확인하세요.'", bizItem: "투명 가격 표시 UI 컴포넌트" },
+        { category: "이커머스", keywords: ["친환경", "상품", "외면"], strategy: "친환경 라벨 및 묶음 배송 기본값 넛지", mechanism: "친환경 인증 마크를 눈에 띄게 붙이고 묶음 배송을 기본값으로 선택되게 합니다.", location: "결제 완료 직전 페이지", elements: "에코 배송 체크박스 기본 선택", copywriting: "'탄소를 줄이는 친환경 모아 배송이 기본으로 적용되었습니다.'", bizItem: "그린 커머스 물류 최적화 솔루션" },
+        { category: "이커머스", keywords: ["회원가입", "이탈", "단계"], strategy: "단계 분할 가입(Progressive Disclosure) 넛지", mechanism: "한 번에 많은 정보를 입력받지 않고 단계를 쪼개어 가입 장벽을 낮춰줍니다.", location: "회원가입 페이지", elements: "멀티스텝 진행바, 간편 로그인", copywriting: "'가입 완료까지 딱 2단계 남았어요! 소중한 3초를 아껴드려요.'", bizItem: "스마트 가입 프로세스 UX 디자인" },
+        { category: "이커머스", keywords: ["재구매", "주기", "리마인드"], strategy: "소모 주기 맞춤형 타이밍 리마인드 넛지", mechanism: "고객이 상품을 다 써갈 무렵(예: 샴푸 2달 뒤)에 정확히 맞춰 재구매 안내를 보냅니다.", location: "모바일 알림톡", elements: "소모 주기 계산 타이머", copywriting: "'지난번에 구매하신 상품, 다 써가지 않으신가요? 알뜰하게 챙겨드려요.'", bizItem: "스마트 소모 주기 리마인더 봇" },
+        { category: "이커머스", keywords: ["선물", "선택", "과부하"], strategy: "상황별 3개 큐레이션 넛지", mechanism: "너무 많은 상품 중 고르지 못할 때 상황에 맞는 딱 3가지 제품만 추려서 보여줍니다.", location: "선물하기 메인 화면", elements: "3단 카드 추천 레이아웃", copywriting: "'고민은 그만! 상대방이 가장 감동할 베스트 선물 3선입니다.'", bizItem: "큐레이션형 선물 추천 서비스" },
+
+        // G. 디지털 웰빙
+        { category: "디지털웰빙", keywords: ["SNS", "과사용", "인터럽트"], strategy: "자각 유도형 인터럽트 넛지", mechanism: "SNS를 일정 시간(예: 15분) 이상 사용하면 부드럽게 알림을 띄워 자각하게 만듭니다.", location: "스마트폰 화면 위 오버레이", elements: "사용 시간 안내 카드", copywriting: "'벌써 15분이 훌쩍 지났네요. 화면을 끄고 바깥 공기를 마셔볼까요?'", bizItem: "디지털 웰빙 타임 가드 앱" },
+        { category: "디지털웰빙", keywords: ["무한", "스크롤", "정지"], strategy: "정지 신호(Stopping Cues) 넛지", mechanism: "피드를 내리다 보면 일정 시점마다 '여기까지 다 보셨어요!' 같은 정지 화면을 보여줍니다.", location: "피드 중간 지점", elements: "일단 멈춤 일러스트 카드", copywriting: "'여기까지 모든 소식을 확인하셨습니다. 잠시 눈을 감고 쉬어가세요.'", bizItem: "스마트 피드 브레이크 인디케이터" },
+        { category: "디지털웰빙", keywords: ["알림", "피로", "요약"], strategy: "묶음 및 요약 알림(Batching) 넛지", mechanism: "쏟아지는 알림을 실시간으로 보내지 않고 하루 몇 번 지정된 시간에 요약해 전달합니다.", location: "스마트폰 알림 센터", elements: "알림 타임라인 요약 박스", copywriting: "'오늘 도착한 알림을 깔끔하게 요약해서 한 번에 전해드립니다.'", bizItem: "알림 피로 해소 요약 매니저" },
+        { category: "디지털웰빙", keywords: ["개인정보", "동의", "최소수집"], strategy: "쉬운 말 요약 및 최소수집 기본값 넛지", mechanism: "깨알 같은 약관을 3줄로 요약하고 마케팅 동의는 기본 해제(최소수집)해 둡니다.", location: "약관 동의 화면", elements: "핵심 요약 카드, 기본 해제 체크박스", copywriting: "'꼭 필요한 정보만 안전하게! 안심하고 동의하세요.'", bizItem: "투명 약관 UX 설계 컴포넌트" },
+        { category: "디지털웰빙", keywords: ["비밀번호", "약한", "강도"], strategy: "실시간 피드백 미터 넛지", mechanism: "비밀번호를 입력할 때 강도 미터기를 실시간으로 보여주며 즉각적인 보완을 유도합니다.", location: "비밀번호 입력란 하단", elements: "색상별 비밀번호 강도 게이지", copywriting: "'안전한 계정 보호를 위해 특수문자를 포함해 더 단단하게 만들어주세요.'", bizItem: "실시간 보안 강도 체크 위젯" },
+        { category: "디지털웰빙", keywords: ["2단계", "인증", "체크리스트"], strategy: "목표 경사 효과 체크리스트 넛지", mechanism: "보안 설정 완료율을 체크리스트 형태로 보여주어 남은 2단계 인증 설정을 독려합니다.", location: "계정 보안 설정 페이지", elements: "진행률 바, 체크 아이콘", copywriting: "'내 계정 안전 지수 80%! 2단계 인증으로 100점을 채워보세요.'", bizItem: "보안 가이드 체계화 패키지" },
+        { category: "디지털웰빙", keywords: ["악성", "댓글", "다시생각"], strategy: "숙고 유도(Friction) 프롬프트 넛지", mechanism: "공격적이거나 악의적인 문구가 감지되면 게시 전 '한 번 더 생각해 보세요' 창을 띄웁니다.", location: "댓글 입력 후 등록 버튼 클릭 시", elements: "숙고 유도 팝업창", copywriting: "'잠시만요! 이 댓글이 누군가에게 상처가 되지 않을지 한 번 더 확인해 주세요.'", bizItem: "클린 커뮤니티 AI 프롬프트 필터" },
+        { category: "디지털웰빙", keywords: ["가짜뉴스", "공유", "출처"], strategy: "출처 확인 마찰 추가 넛지", mechanism: "뉴스를 공유하기 전 '원문 출처를 확인하셨나요?'라는 가벼운 질문을 던져 확산을 막습니다.", location: "공유하기 버튼 클릭 시", elements: "출처 확인 안내 팝업", copywriting: "'정확한 정보 공유를 위해 기사의 원문 출처를 한 번 더 살펴볼까요?'", bizItem: "팩트체크 유도 공유 플러그인" },
+        { category: "디지털웰빙", keywords: ["온보딩", "이탈", "진행률"], strategy: "진행률이 미리 채워진 체크리스트 넛지", mechanism: "온보딩 시작 시 첫 번째 단계가 이미 완료된 상태로 보여주어 완주율을 높입니다.", location: "앱 첫 실행 가이드 화면", elements: "체크된 1단계 항목", copywriting: "'환영합니다! 이미 첫 걸음이 완료되었어요. 남은 단계를 가볍게 둘러보세요.'", bizItem: "스마트 온보딩 UX 최적화 툴" },
+        { category: "디지털웰빙", keywords: ["업데이트", "지연", "자동"], strategy: "기본값(Default) 자동화 넛지", mechanism: "백그라운드 자동 업데이트를 기본값으로 설정해 사용자가 번거로운 수동 조작을 안 하게 합니다.", location: "앱 스토어 설정 화면", elements: "자동 업데이트 활성화 기본 세팅", copywriting: "'항상 가장 안전하고 최신 버전을 자동으로 유지해 드립니다.'", bizItem: "소프트웨어 자동화 관리 솔루션" },
+
+        // H. 직장·조직
+        { category: "직장·조직", keywords: ["회의", "지각", "시작"], strategy: "시작 5분 전 리마인더 넛지", mechanism: "회의 시작 직전 모든 참석자에게 알림을 보내 지각을 방지하고 정시 시작을 유도합니다.", location: "캘린더 앱, 업무용 메신저", elements: "5분 전 카운트다운 알림", copywriting: "'잠시 후 5분 뒤 회의가 시작됩니다. 회의실로 이동해 주세요!'", bizItem: "스마트 오피스 타임 키퍼" },
+        { category: "직장·조직", keywords: ["회의", "과다", "시간", "25분"], strategy: "기본값 캘린더 길이 단축(25분/50분) 넛지", mechanism: "기본 회의 시간을 30분 대신 25분(또는 60분을 50분)으로 세팅해 여유 시간을 확보합니다.", location: "사내 캘린더 시스템", elements: "기본 25분 슬롯 설정", copywriting: "'알차고 집중력 있는 회의를 위해 기본 시간을 25분으로 설정합니다.'", bizItem: "스마트 캘린더 효율화 컨설팅" },
+        { category: "직장·조직", keywords: ["발언", "동조", "브레인라이팅"], strategy: "개별 브레인라이팅 도입 넛지", mechanism: "회의 시 돌아가며 말하기 전, 각자 포스트에 아이디어를 적고 시작해 동조 현상을 막습니다.", location: "회의실 테이블, 협업 툴", elements: "익명 포스트잇, 브레인라이팅 보드", copywriting: "'눈치 보지 말고 각자의 소중한 아이디어를 먼저 적어보세요!'", bizItem: "수평적 회의 문화 키트" },
+        { category: "직장·조직", keywords: ["칭찬", "피드백", "문화"], strategy: "사회적 보상 및 감사 카드 넛지", mechanism: "동료에게 쉽게 감사를 전할 수 있는 칭찬 채널이나 실물 감사 카드를 활성화합니다.", location: "사내 메신저, 휴게실", elements: "디지털 감사 스티커, 칭찬 게시판", copywriting: "'오늘 멋진 도움을 준 동료에게 따뜻한 마음을 전해볼까요?'", bizItem: "사내 긍정 문화 빌더 패키지" },
+        { category: "직장·조직", keywords: ["휴가", "미사용", "연차"], strategy: "자동 제안 및 사용률 공개 넛지", mechanism: "남은 연차를 쓰기 좋은 시기를 시스템이 먼저 제안하고 부서별 사용률을 투명하게 공개합니다.", location: "HR 사내 시스템", elements: "연차 사용 추천 날짜, 부서별 현황판", copywriting: "'재충전이 필요한 시기입니다! 이번 달 추천 휴가일을 확인해보세요.'", bizItem: "스마트 HR 워라밸 관리 툴" },
+        { category: "직장·조직", keywords: ["이메일", "과부하", "발송"], strategy: "발송 지연 및 수신자 축소 알림 넛지", mechanism: "퇴근 시간 이후 이메일 발송 시 전송을 아침까지 지연시키거나 불필요한 참조를 경고합니다.", location: "사내 이메일 클라이언트", elements: "야간 발송 지연 토글, 참조 경고", copywriting: "'지금은 휴식 시간입니다. 이메일 발송은 내일 아침으로 예약할까요?'", bizItem: "오피스 이메일 다이어트 솔루션" },
+        { category: "직장·조직", keywords: ["우선순위", "혼란", "매트릭스"], strategy: "긴급·중요 2x2 구조화 템플릿 넛지", mechanism: "복잡한 업무 리스트를 2x2 매트릭스에 드래그 앤 드롭해 우선순위를 직관적으로 정하게 합니다.", location: "업무 관리 대시보드", elements: "2x2 우선순위 분류 칸반", copywriting: "'무엇을 먼저 해야 할지 고민될 때, 중요한 일에 집중해 보세요.'", bizItem: "스마트 업무 우선순위 보드" },
+        { category: "직장·조직", keywords: ["채용", "평가", "편향", "블라인드"], strategy: "블라인드 평가 및 편향 제거 넛지", mechanism: "이력서 내 학벌, 사진, 성별 등 편향을 유발하는 요소를 자동으로 가려 공정성을 높입니다.", location: "채용 심사 플랫폼", elements: "자동 마스킹 블라인드 뷰", copywriting: "'오직 역량과 열정만으로 공정하게 평가하는 블라인드 시스템입니다.'", bizItem: "공정 채용 블라인드 평가 솔루션" },
+        { category: "직장·조직", keywords: ["직원", "운동", "부족", "팀"], strategy: "사회적 비교 및 팀 책임 넛지", mechanism: "팀 단위로 걸음 수나 운동 챌린지를 진행해 서로 독려하며 건강을 챙기게 유도합니다.", location: "사내 웰니스 앱", elements: "팀별 누적 걸음 수 랭킹 보드", copywriting: "'우리 팀이 이번 주 1위를 달리고 있어요! 함께 걸어볼까요?'", bizItem: "오피스 팀워크 웰니스 챌린지" },
+        { category: "직장·조직", keywords: ["보안", "교육", "피싱"], strategy: "모의 훈련 및 즉각 피드백 넛지", mechanism: "주기적인 피싱 메일 모의훈련을 실시하고 클릭 시 즉각적인 맞춤 교육 페이지를 띄웁니다.", location: "사내 이메일 수신함", elements: "모의 피싱 경고 및 1분 팁", copywriting: "'앗! 가짜 피싱 메일 훈련이었습니다. 다음 번엔 이 포인트를 꼭 확인하세요!'", bizItem: "사내 맞춤형 보안 훈련 솔루션" },
+
+        // I. 안전·교통
+        { category: "안전·교통", keywords: ["과속", "속도", "얼굴"], strategy: "즉각적 표정 피드백 넛지", mechanism: "속도 위반 시 과속 표시판에 웃는 얼굴에서 찡그린 얼굴로 즉시 바뀌어 경각심을 줍니다.", location: "도로변 스마트 과속 단속판", elements: "LED 표정 아이콘 변화", copywriting: "'조금만 천천히, 안전 운전으로 우리 모두를 지켜주세요.'", bizItem: "스마트 도로 표정 피드백 사이니지" },
+        { category: "안전·교통", keywords: ["안전벨트", "뒷좌석", "경고음"], strategy: "점진적 신호 및 경고음 넛지", mechanism: "뒷좌석 탑승자가 벨트를 매지 않으면 가벼운 알림에서 점차 강한 경고음으로 단계를 높입니다.", location: "차량 내부 계기판", elements: "단계별 경고 사운드 및 아이콘", copywriting: "'모두의 안전을 위해 뒷좌석 안전벨트를 확인해 주세요.'", bizItem: "차량용 스마트 탑승 안전 시스템" },
+        { category: "안전·교통", keywords: ["스몸비", "횡단보도", "바닥"], strategy: "바닥 신호등 및 시선 유도 넛지", mechanism: "스마트폰을 보며 걷는 보행자의 시선 아래에 바닥 신호등을 설치해 사고를 예방합니다.", location: "횡단보도 앞 보행로 바닥", elements: "LED 바닥 매립형 신호등", copywriting: "'잠시 스마트폰에서 눈을 떼고 안전하게 건너세요.'", bizItem: "스마트 바닥 신호등 패키지" },
+        { category: "안전·교통", keywords: ["자전거", "헬멧", "착용"], strategy: "사회적 규범 안내 넛지", mechanism: "'이 동네 자전거 이용자의 85%가 헬멧을 착용합니다'라는 문구를 통해 착용을 유도합니다.", location: "공공 자전거 대여소", elements: "안내 스티커, 거울 앞 문구", copywriting: "'우리 동네 멋진 라이더들은 안전모 착용을 잊지 않습니다.'", bizItem: "공공 자전거 안전 캠페인 키트" },
+        { category: "안전·교통", keywords: ["음주", "운전", "귀가"], strategy: "사전 계획 및 서비스 연동 넛지", mechanism: "술자리 모임 예약 시 대리운전이나 귀가 택시 서비스가 자연스럽게 미리 연결되도록 돕습니다.", location: "주점 예약 앱, 결제 화면", elements: "원클릭 귀가 콜 버튼", copywriting: "'오늘 즐거운 만남의 완벽한 마무리는 안전한 귀가입니다.'", bizItem: "안심 귀가 연동 예약 솔루션" },
+        { category: "안전·교통", keywords: ["손", "씻기", "소홀", "화장실"], strategy: "눈높이 안내 및 타이머 넛지", mechanism: "세면대 거울 눈높이에 30초 손 씻기 가이드와 시각 타이머를 부착해 위생을 지킵니다.", location: "화장실 세면대 거울", elements: "30초 타이머 스티커, 픽토그램", copywriting: "'비누칠을 하고 30초 동안 꼼꼼하게 손을 씻어주세요.'", bizItem: "위생 실천 거울 스티커 팩" },
+        { category: "안전·교통", keywords: ["화재", "대피", "유도등"], strategy: "시각적 비상 유도등 넛지", mechanism: "화재 시 연기가 아래로 깔리는 것에 대비해 바닥 가까운 곳에 비상 유도등을 설치합니다.", location: "건물 복도 및 비상구 바닥", elements: "저고도 발광 유도 라인", copywriting: "'연기가 차올라도 바닥 유도등을 따라 안전하게 대피하세요.'", bizItem: "저고도 비상 대피 유도 시스템" },
+        { category: "안전·교통", keywords: ["작업", "안전", "수칙"], strategy: "체크리스트 구조화 넛지", mechanism: "현장 작업 전 필수 안전 수칙을 체크리스트 형태로 하나씩 확인해야만 장비가 작동하게 합니다.", location: "산업 현장 단말기", elements: "필수 체크 항목 리스트", copywriting: "'오늘도 안전 제일! 모든 수칙을 확인하고 작업을 시작하세요.'", bizItem: "스마트 현장 안전 체크 태블릿" },
+        { category: "안전·교통", keywords: ["공중화장실", "소변기", "파리"], strategy: "목표 시각화 및 청결 넛지", mechanism: "소변기 중앙에 작은 파리 스티커를 붙여 무의식적인 조준을 유도하고 주변 오염을 막습니다.", location: "공중화장실 소변기", elements: "방수 파리 타겟 스티커", copywriting: "'여기를 정확히 조준해 주세요! 모두가 깨끗한 화장실입니다.'", bizItem: "위생 타겟 스티커 패키지" },
+        { category: "안전·교통", keywords: ["계단", "낙상", "모서리"], strategy: "대비색 모서리 마킹 넛지", mechanism: "계단 끝 모서리에 시인성이 높은 대비색 라인을 넣어 발 디딤 위치를 명확히 인지시킵니다.", location: "건물 내부 계단", elements: "논슬립 노란색 야광 테이프", copywriting: "'계단 오르내릴 때 모서리를 확인하고 안전하게 걸으세요.'", bizItem: "계단 안전 대비색 마킹 테이프" },
+
+        // J. 사회·관계·기타
+        { category: "사회·관계", keywords: ["기부", "저조", "피해자"], strategy: "식별 가능한 피해자 효과(Identifiable Victim) 넛지", mechanism: "막연한 단체 대신 구체적인 사연과 얼굴이 있는 한 사람의 이야기를 전달하고 금액 앵커를 제시합니다.", location: "기부 캠페인 페이지", elements: "사연 카드, 추천 기부 버튼", copywriting: "'이 아이가 다시 미소를 찾을 수 있도록 따뜻한 손을 내밀어 주세요.'", bizItem: "스토리텔링형 기부 펀딩 플랫폼" },
+        { category: "사회·관계", keywords: ["봉사", "참여", "친구"], strategy: "친구 동반 신청 유도 넛지", mechanism: "혼자 신청하기보다 친구나 가족과 함께 동반 신청할 수 있는 간편한 UI를 제공합니다.", location: "자원봉사 신청 페이지", elements: "친구 초대 링크, 동반 신청 칸", copywriting: "'좋은 일에 함께하면 기쁨이 두 배! 친구와 함께 신청해보세요.'", bizItem: "소셜 봉사 매칭 플랫폼" },
+        { category: "사회·관계", keywords: ["학교폭력", "방관", "신고"], strategy: "방관자 책임 분산 완화 및 가이드 넛지", mechanism: "목격했을 때 구체적으로 어떻게 행동해야 하는지 행동 가이드를 주고 익명 신고를 쉽게 만듭니다.", location: "학교 복도, 학생 앱", elements: "익명 원클릭 신고 버튼, 행동 가이드", copywriting: "'작은 용기 있는 신고가 친구를 지키는 가장 큰 힘이 됩니다.'", bizItem: "안심 학교 익명 소통 솔루션" },
+        { category: "사회·관계", keywords: ["층간소음", "갈등", "이웃"], strategy: "이웃 인간화(Humanization) 넛지", mechanism: "차가운 경고문 대신 실제 이웃의 따뜻한 얼굴과 사연이 담긴 부드러운 안내문을 전달합니다.", location: "현관문, 엘리베이터 공지", elements: "이웃 프로필 일러스트 안내문", copywriting: "'윗집에 사는 아이 엄마입니다. 우리 서로 얼굴 붉히지 않고 웃으며 인사해요.'", bizItem: "이웃 소통 감성 안내문 패키지" },
+        { category: "사회·관계", keywords: ["고립", "외로움", "안부"], strategy: "정기 안부 체크인 서비스 넛지", mechanism: "혼자 사는 어르신이나 1인가구에게 가벼운 문답이나 자동 안부 체크인 서비스를 제공합니다.", location: "모바일 알림톡, 스마트폰 앱", elements: "원클릭 '오늘도 건강해요' 버튼", copywriting: "'오늘 하루도 무탈하게 잘 지내고 계신지 따뜻한 안부를 여쭙니다.'", bizItem: "1인가구 안심 케어 체크인 서비스" },
+        { category: "사회·관계", keywords: ["예약", "노쇼", "방문"], strategy: "능동적 약속(Direct Input) 넛지", mechanism: "'예약 확인' 버튼 대신 방문 예정 시간을 직접 키보드로 입력하게 만들어 노쇼를 방지합니다.", location: "예약 완료 페이지", elements: "시간 직접 입력 폼", copywriting: "'방문하실 정확한 시간을 직접 입력해 주세요. 소중한 약속을 기다립니다.'", bizItem: "노쇼 방지 스마트 예약 시스템" },
+        { category: "사회·관계", keywords: ["줄서기", "혼란", "대기선"], strategy: "바닥 대기선 및 시각적 질서 넛지", mechanism: "바닥에 명확한 대기선과 동선을 스티커로 표시해 자연스럽게 한 줄 서기를 유도합니다.", location: "매장 카운터 앞, 승강장 바닥", elements: "알록달록한 동선 유도 스티커", copywriting: "'순서대로 차례를 지켜주시는 당신의 멋진 매너에 감사드립니다.'", bizItem: "공간 동선 유도 랩핑 키트" },
+        { category: "사회·관계", keywords: ["도서", "연체", "반납"], strategy: "리마인더 및 연체 누적 시각화 넛지", mechanism: "반납일 전 친절한 알림을 주고, 연체될 경우 다른 사람들이 책을 못 보는 상황을 시각화합니다.", location: "도서관 앱 알림", elements: "대기자 수 표시, 반납 기한 카운터", copywriting: "'다음 친구가 이 책을 기다리고 있어요! 오늘 꼭 도서관에 들러주세요.'", bizItem: "스마트 도서관 반납 알림 봇" },
+        { category: "사회·관계", keywords: ["공공장소", "소음", "공감"], strategy: "공감 프레이밍 안내문 넛지", mechanism: "'정숙하세요' 같은 명령조 대신 '다른 분들을 배려해 주세요'라는 공감형 문구를 배치합니다.", location: "도서관, 독서실, 카페 벽면", elements: "부드러운 일러스트 안내판", copywriting: "'우리 모두의 편안한 휴식을 위해 작은 목소리로 이야기해 주세요.'", bizItem: "공공장소 매너 사이니지 세트" },
+        { category: "사회·관계", keywords: ["새", "습관", "트래커"], strategy: "습관 스태킹(Habit Stacking) 및 21일 트래커 넛지", mechanism: "기존의 익숙한 습관에 새 습관을 얹고 21일간 칸을 채워나가는 트래커를 제공합니다.", location: "개인 다이어리, 습관 앱", elements: "21일 달성 체크 스티커 판", copywriting: "'양치질을 한 직후에 물 한 잔 마시기! 21일 동안 멋지게 채워볼까요?'", bizItem: "행동변화 21일 스태킹 트래커" }
+    ];
+
+    const DEFAULT_NUDGE = {
+        category: "환경·에너지",
+        strategy: "행동 유도형 공간 재배치 및 맥락 프레이밍 넛지",
+        mechanism: "선택 구조(Choice Architecture)를 재설계하여 부담이나 강요 없이 원하는 행동의 실행 장벽을 낮춥니다.",
+        location: "문제 행동이 발생하는 접점 및 시선이 머무는 동선",
+        elements: "직관적 픽토그램 안내판, 동선 스티커",
+        copywriting: "'작은 관심이 더 나은 환경을 만듭니다. 함께해 주실 거죠?'",
+        bizItem: "현장 맥락 분석 리포트 및 맞춤형 넛지 사이니지 제작"
+    };
+
+    const nudgeForm = document.getElementById('nudgeForm');
+    const cardsGrid = document.getElementById('cardsGrid');
+    const btnSubmit = document.getElementById('btnSubmit');
+
+    // 페이지 로드 시 구글시트에서 누적된 처방 기록 불러오기 (GET)
+    document.addEventListener('DOMContentLoaded', fetchHistoryFromSheet);
+
+    nudgeForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('userName').value.trim();
+        const problem = document.getElementById('userProblem').value.trim();
+
+        if (!name || !problem) return;
+
+        btnSubmit.disabled = true;
+        btnSubmit.innerText = "⏳ 100선 DB 분석 및 처방전 작성 중...";
+
+        // 100선 내장 DB에서 키워드 매칭 검색
+        let matchedNudge = DEFAULT_NUDGE;
+        let maxScore = 0;
+
+        for (const item of NUDGE_DATABASE) {
+            let score = 0;
+            item.keywords.forEach(kw => {
+                if (problem.includes(kw)) {
+                    score += 1;
+                }
+            });
+            if (score > maxScore) {
+                maxScore = score;
+                matchedNudge = item;
+            }
+        }
+
+        const newCardData = {
+            id: Date.now(),
+            name: name,
+            problem: problem,
+            solution: matchedNudge,
+            timestamp: new Date().toLocaleString('ko-KR', { 
+                month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+            })
+        };
+
+        // 구글 시트에 처방 기록 저장 (POST)
+        try {
+            await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newCardData)
+            });
+
+            resetFilterToAll();
+            renderCard(newCardData, true);
+            document.getElementById('userProblem').value = '';
+        } catch (error) {
+            alert("DB 저장 중 오류가 발생했습니다. 다시 시도해주세요.");
+            console.error(error);
+        } finally {
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = "✨ 맞춤형 넛지 솔루션 처방받기";
+        }
+    });
+
+    // 구글 시트에서 누적 기록 가져오기
+    async function fetchHistoryFromSheet() {
+        try {
+            const response = await fetch(GOOGLE_SCRIPT_URL);
+            const historyData = await response.json();
+            
+            cardsGrid.innerHTML = '';
+            if (!historyData || historyData.length === 0) {
+                cardsGrid.innerHTML = `
+                    <div class="empty-state">
+                        <p>💡 위 폼에 고민을 입력하시면 100선 기반 맞춤형 넛지 처방전이 이곳에 쌓입니다.</p>
+                    </div>
+                `;
+            } else {
+                historyData.forEach(card => renderCard(card, false));
+            }
+        } catch (error) {
+            console.error("데이터 불러오기 실패:", error);
+            cardsGrid.innerHTML = `
+                <div class="empty-state">
+                    <p>⚠️ 처방 보드를 불러오는 데 실패했습니다. Apps Script URL을 확인해주세요.</p>
+                </div>
+            `;
+        }
+    }
+
+    function renderCard(card, isNew) {
+        const emptyState = document.querySelector('.empty-state');
+        if (emptyState) emptyState.remove();
+
+        const cardEl = document.createElement('div');
+        cardEl.className = 'nudge-card';
+        const cardCategory = card.solution && card.solution.category ? card.solution.category : '환경·에너지';
+        cardEl.setAttribute('data-category', cardCategory);
+
+        cardEl.innerHTML = `
+            <div class="card-header-info">
+                <span class="user-tag">🏢 ${card.name} 님의 고민 (${cardCategory})</span>
+                <span class="timestamp">${card.timestamp}</span>
+            </div>
+            <div class="user-problem-box">
+                " ${card.problem} "
+            </div>
+            <div class="solution-section">
+                <div class="info-item full-width">
+                    <span class="label">🎯 추천 넛지 전략</span>
+                    <span class="content">${card.solution.strategy}</span>
+                </div>
+                <div class="info-item full-width">
+                    <span class="label">🧠 심리학적 메커니즘</span>
+                    <span class="content">${card.solution.mechanism}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">📍 실천 장소 및 적용 포인트</span>
+                    <span class="content">${card.solution.location}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">🎨 물리적 / 디자인 요소</span>
+                    <span class="content">${card.solution.elements}</span>
+                </div>
+                <div class="info-item full-width">
+                    <span class="label">💬 추천 안내 문구 (카피라이팅)</span>
+                    <span class="content">${card.solution.copywriting}</span>
+                </div>
+                <div class="info-item full-width">
+                    <span class="label">📦 넌지시 제안 제품 / 서비스</span>
+                    <span class="content">${card.solution.bizItem}</span>
+                </div>
+            </div>
+        `;
+
+        if (isNew) {
+            cardsGrid.prepend(cardEl);
+        } else {
+            cardsGrid.appendChild(cardEl);
+        }
+    }
+
+    // 카테고리 필터 탭 클릭 이벤트
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('filter-btn')) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            e.target.classList.add('active');
+
+            const selectedCategory = e.target.getAttribute('data-category');
+            const cards = document.querySelectorAll('.nudge-card');
+
+            cards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                if (selectedCategory === 'all' || cardCategory === selectedCategory) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    });
+
+    function resetFilterToAll() {
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-category') === 'all') {
+                btn.classList.add('active');
+            }
+        });
+        document.querySelectorAll('.nudge-card').forEach(card => {
+            card.style.display = 'block';
+        });
+    }
+</script>
+
+</body>
+</html>
